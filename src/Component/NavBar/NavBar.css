@@ -1,0 +1,14 @@
+.NavBar {
+  display: flex;
+  font-size: 1.25rem;
+}
+
+.linkOnNav {
+  margin-left: 3rem;
+  line-height: 30px;
+  display: block;
+  text-align: center;
+}
+.brand {
+  font-size: 2rem;
+}
