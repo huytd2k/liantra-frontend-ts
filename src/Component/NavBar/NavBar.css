@@ -1,5 +1,5 @@
 .NavBar {
-  display: flex;
+    display: flex;
   font-size: 1.25rem;
 }
 
@@ -10,5 +10,6 @@
   text-align: center;
 }
 .brand {
+  color: antiquewhite;
   font-size: 2rem;
 }

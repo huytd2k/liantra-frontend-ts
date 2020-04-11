@@ -1,22 +1,26 @@
 import React from 'react'
 import './FrontHeader.css'
-import { Button } from 'react-bootstrap'
-
+import { Button, Jumbotron, Container, Row, Col } from 'react-bootstrap'
+import RegisterForm from '../RegisterForm'
+import bg from './bg.jpeg'
+const sectionBgStyle = {
+    backgroundImage : `url(${bg})`,
+}
 
 export default function FrontHeader() {
     return (
-        <header className ="frontHeader">
-            <div className="contentContainer">
-                <h1 className="title">Liantra</h1>
-                <p className="description"> <b>Li</b>sten <b>an</b>d <b>Tra</b>ncribe</p>
-                <div className="btnWrapper">
-                    <Button className="startBtn">Start Learning</Button>
-                    <div className="signUpBtn">
-                        <a href="#" className="signInLink">Sign In </a>
-                    </div>
-                </div>
-                
-            </div>
-        </header>
+        <Jumbotron fluid className="contentContainer" >
+            <Container>
+                <Row>
+                    <Col xs={6} className="brandName" >
+                        <h1 className="title">Listen and transcibe</h1>
+                        <p className="description">Practice English's listening skill by transcribing.</p>
+                    </Col>
+                    <Col xs={5}>
+                        <RegisterForm />
+                    </Col>
+                </Row>
+            </Container>
+        </Jumbotron>
     )
 }

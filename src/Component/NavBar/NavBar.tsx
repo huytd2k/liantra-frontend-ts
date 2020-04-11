@@ -18,7 +18,7 @@ export default function NavBar() {
   };
   return (
     <div>
-      <Navbar bg="light" expand="lg" className="NavBar">
+      <Navbar variant="light" bg="light" expand="lg" className="NavBar">
         <Container>
           <Navbar.Brand className="brand" href="#home">
             Liantra

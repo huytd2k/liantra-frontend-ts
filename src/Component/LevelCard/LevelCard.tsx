@@ -8,7 +8,7 @@ import { LevelCardProps } from './LevelCardProps'
 export default function LevelCard(props : LevelCardProps) {
     let stars = []
     for (let i = 1; i <= props.level; i++) {
-        stars.push(<img alt="star" className="star" src={Star}></img>)
+        stars.push(<img alt="star" className="star" ></img>)
     }
     return (
         <Col>
