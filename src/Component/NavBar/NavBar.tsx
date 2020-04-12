@@ -11,9 +11,13 @@ import {
   useShowLogin
 } from "../../Context/ShowLoginContext";
 import { Link } from "react-router-dom";
+import logoBrand from './brand-logo.png';
+import githubIcon from './github-icon.svg'
+
+
 export default function NavBar() {
-  const {showLogin, setShowLogin} = useShowLogin();
-  const toggleLoginPanel = (e : React.MouseEvent) => {
+  const { showLogin, setShowLogin } = useShowLogin();
+  const toggleLoginPanel = (e: React.MouseEvent) => {
     setShowLogin(!showLogin);
   };
   return (
@@ -21,23 +25,22 @@ export default function NavBar() {
       <Navbar variant="light" bg="light" expand="lg" className="NavBar">
         <Container>
           <Navbar.Brand className="brand" href="#home">
-            Liantra
+            <img className="logo" src={logoBrand}></img>
           </Navbar.Brand>
           <Navbar.Collapse>
             <div id="basic-navbar-nav" className="ml-auto">
               <Nav>
-                <Button
-                  href="#home"
-                  className="linkOnNav"
-                  onClick={toggleLoginPanel}>
-                  Login
-                </Button>
-                <Nav.Link  className="linkOnNav">
-                  <Link to="/">Home</Link>
-                </Nav.Link>
-                <Nav.Link  className="linkOnNav">
-                  <Link to="/tape">Tape</Link>
-                </Nav.Link>
+
+                <Link to="#" className="signUpButton">
+                  Sign Up
+                </Link>
+                <Link to="#" className="signInButton">
+                  Sign In
+                </Link>
+                <Link to="#" className="signUpButton">
+                  View on github
+                  <img className="githubIcon" src={githubIcon}></img>
+                </Link>
               </Nav>
             </div>
           </Navbar.Collapse>

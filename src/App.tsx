@@ -7,6 +7,7 @@ import { ShowLoginProvider } from "./Context/ShowLoginContext";
 import { TapeProvider } from "./Context/TapeContext";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import TapePage from "./Page/TapePage";
+import TapeFeed from "./Page/TapeFeed";
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
                 </Route>
                 <Route path="/tape">
                   <TapePage />
+                </Route>
+                <Route path="/feed">
+                  <TapeFeed />
                 </Route>
               </Switch>
             </header>

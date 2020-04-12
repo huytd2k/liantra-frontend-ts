@@ -16,7 +16,7 @@ export default function FrontHeader() {
                         <h1 className="title">Listen and transcibe</h1>
                         <p className="description">Practice English's listening skill by transcribing.</p>
                     </Col>
-                    <Col xs={5}>
+                    <Col xs={6}>
                         <RegisterForm />
                     </Col>
                 </Row>

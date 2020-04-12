@@ -7,6 +7,7 @@ export default function FrontPage() {
   return (
     <div className="Frontpage">
       <FrontHeader />
+      <hr className="lineBreak"></hr>
       <Container className="mainCtn">
         <p className="quote">
           "Speak a new language <br></br> So that the world will be a new world."

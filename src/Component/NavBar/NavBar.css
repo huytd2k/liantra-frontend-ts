@@ -1,15 +1,66 @@
 .NavBar {
     display: flex;
-  font-size: 1.25rem;
+    font-size: 1.25rem;
 }
 
 .linkOnNav {
-  margin-left: 3rem;
-  line-height: 30px;
-  display: block;
-  text-align: center;
+    width: 90px;
+    margin-left: 10px;
+    border-radius: 2px;
 }
+
 .brand {
-  color: antiquewhite;
-  font-size: 2rem;
+    margin-top: -7px;
+    color: antiquewhite;
+    font-size: 2rem;
+}
+
+.signInButton {
+    margin-right: 15px;
+    margin-left: 1rem;
+    line-height: 1.5;
+    font-size: 16px!important;
+    text-align: left!important;
+    box-sizing: border-box;
+    border: 1px solid #e1e4e8!important;
+    border-radius: 3px!important;
+    border-color: #d1d5da!important;
+    padding-left: 8px!important;
+    padding-right: 8px!important;
+    text-decoration: none!important;
+    display: inline-block!important;
+    padding-top: 4px!important;
+    padding-bottom: 4px!important;
+    background: transparent;
+    color: #3f7573;
+    transition: .4s;
+}
+
+.signInButton:hover {
+    color: #192b2a;
+}
+
+.signUpButton {
+    line-height: 1.5;
+    font-size: 16px!important;
+    text-align: left!important;
+    box-sizing: border-box;
+    padding-left: 8px!important;
+    padding-right: 8px!important;
+    text-decoration: none!important;
+    display: inline-block!important;
+    padding-top: 4px!important;
+    padding-bottom: 4px!important;
+    background: transparent;
+    color: #3f7573;
+    transition: .4s;
+}
+
+.signUpButton:hover {
+    color: #192b2a;
+}
+
+.githubIcon {
+    margin-left: 10px;
+    height: 1.5rem;
 }

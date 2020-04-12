@@ -1,8 +1,9 @@
 export class Tape {
-    id!: string;
+    id!: number;
     title!: string;
     level!: number;
     script!: string;
     description!: string;
     ytUrl!: string;
+    tags!: string[];
 }

@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Lora&display=swap');
-.mainCtn {
-    
+.contentContainer {
+    height: 850px;
 }
 .quote {
     color: rgb(0,0,0,0.5);
-    margin: 5rem auto 10px auto;
+    margin: 1rem auto 10px auto;
     font-size: 2rem;
     font-style: italic;
     opacity: 90%;
@@ -23,4 +23,8 @@
     background-color: #fafbfc;
     height: 4rem;
     line-height: 4rem;
+}
+.lineBreak {
+    margin-top: 4rem;
+    width: 70vh;
 }
