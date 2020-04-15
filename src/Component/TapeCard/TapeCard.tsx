@@ -24,11 +24,11 @@ export default function TapeCard(props: TapeCardProps) {
                     <Card.Text>
                         {props.tape.description}
                     </Card.Text>
-                    {props.tape.tags.map(tag => 
+                    {/* {props.tape.tags.map(tag => 
                         <Link className="tagLink" to="#">
                                 {`#${tag}`}
                         </Link>
-                        )}
+                        )} */}
                 </Card.Body>
                 <Card.Img className="thumbnail" src="https://img.youtube.com/vi/7NOSDKb0HlU/0.jpg"></Card.Img>
             </Card>
