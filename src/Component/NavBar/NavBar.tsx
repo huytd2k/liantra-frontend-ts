@@ -1,22 +1,29 @@
-import React from "react";
-import { Navbar, Nav, Button, Container } from "react-bootstrap";
-import "./NavBar.css";
-import LoginPanel from "../LoginPanel";
-import { useShowLogin } from "../../Context/ShowLoginContext";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import React, { useEffect } from "react";
+import {
+  Container,
+  Nav,
+  Navbar,
+  DropdownButton,
+  Dropdown,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useShowLogin } from "../../Context/ShowLoginContext";
+import { ME_QUERY, UserResponseData, LOGOUT_MUTATION } from "../../Model/UserInput";
+import LoginPanel from "../LoginPanel";
 import logoBrand from "./brand-logo.png";
 import githubIcon from "./github-icon.svg";
-import { useQuery } from "@apollo/react-hooks";
-import { UserResponseData, ME_QUERY } from "../../Model/UserInput";
+import "./NavBar.scss";
 
 export default function NavBar() {
   const { showLogin, setShowLogin } = useShowLogin();
-  // const { data, loading, error } = useQuery<UserResponseData>(ME_QUERY);
-  // console.log(loading);
-  // console.log(error);
+  const { data, loading, error } = useQuery<UserResponseData>(ME_QUERY);
   const toggleLoginPanel = (e: React.MouseEvent) => {
     setShowLogin(!showLogin);
   };
+  
+
+  useEffect(() => console.log("invoke effect"), [data?.me]);
   return (
     <div>
       <Navbar variant="light" bg="light" expand="lg" className="NavBar">
@@ -27,17 +34,15 @@ export default function NavBar() {
           <Navbar.Collapse>
             <div id="basic-navbar-nav" className="ml-auto">
               <Nav>
-                {/* {data && <Link to="#">{data?.userInfo.username}</Link>} */}
-                <Link to="#" className="signUpButton">
-                  Sign Up
-                </Link>
-                <Link to="#" className="signInButton">
-                  Sign In
-                </Link>
                 <Link to="#" className="signUpButton">
                   View on github
                   <img className="githubIcon" src={githubIcon}></img>
                 </Link>
+                {data?.me != undefined ? (
+                  <PostLoginNav me={data!.me} isOk={data!.isOk} />
+                ) : (
+                  <PreLoginNav />
+                )}
               </Nav>
             </div>
           </Navbar.Collapse>
@@ -45,5 +50,34 @@ export default function NavBar() {
       </Navbar>
       {showLogin && <LoginPanel />}
     </div>
+  );
+}
+
+function PreLoginNav() {
+  return (
+    <div>
+      <Link to="#" className="signUpButton">
+        Sign Up
+      </Link>
+      <Link to="#" className="signInButton">
+        Sign In
+      </Link>
+    </div>
+  );
+}
+
+function PostLoginNav({ me }: UserResponseData) {
+  const [logOut] = useMutation(LOGOUT_MUTATION); 
+  return (
+    <Dropdown>
+      <Dropdown.Toggle className="dropdownUser" variant="success" id="dropdown-basic">
+        {me.username}
+      </Dropdown.Toggle>
+
+      <Dropdown.Menu>
+        <Dropdown.Item onClick={ () => { logOut(); window.location.reload()} } href="#/action-1">Profile</Dropdown.Item>
+        <Dropdown.Item href="#/action-3">Log Out</Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
   );
 }

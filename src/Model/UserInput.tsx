@@ -7,7 +7,7 @@ export interface User {
 }
 export interface UserResponseData {
   isOk: boolean;
-  userInfo: User;
+  me: User;
 }
 
 export const REGISTER_MUTATION = gql`
@@ -31,3 +31,9 @@ export const ME_QUERY = gql`
   }
 
 `;
+
+export const LOGOUT_MUTATION = gql`
+  mutation {
+    logOut
+  }
+`

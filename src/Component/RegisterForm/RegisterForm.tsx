@@ -59,7 +59,7 @@ export default function RegisterForm({}: RegisterFormProps) {
         </Form.Group>
 
         <Button
-        onClick = {(e: any) => {e.preventDefault(); username && password && email && registerUser()}}
+        onClick = {(e: any) => {e.preventDefault(); username && password && email && registerUser() ; window.location.reload()}}
           variant="outline-success"
           className="regSubmitBtn"
           type="submit"
