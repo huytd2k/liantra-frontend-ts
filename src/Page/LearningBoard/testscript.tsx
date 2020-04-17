@@ -1,4 +1,10 @@
-export const script = [{
+interface line {
+    'text': string,
+    'start': number,
+    'duration': number
+}
+
+export const script: Array<line> = [{
     'text': 'So in college,',
     'start': 12.645,
     'duration': 1.37
@@ -19,7 +25,7 @@ export const script = [{
     'start': 21.495,
     'duration': 2.373
 }, {
-    'text': 'So, you know --',
+    'text': 'So, you know   ',
     'start': 23.892,
     'duration': 1.151
 },  {
@@ -63,7 +69,7 @@ export const script = [{
     'start': 48.757,
     'duration': 2.143
 }, {
-    'text': 'But then came my 90-page senior thesis,',
+    'text': 'But then came my ninety page senior thesis,',
     'start': 51.638,
     'duration': 3.882
 }, {
@@ -135,7 +141,7 @@ export const script = [{
     'start': 89.591,
     'duration': 1.849
 },  {
-    'text': 'And then --',
+    'text': 'And then     ',
     'start': 92.655,
     'duration': 1.159
 },  {
@@ -179,11 +185,11 @@ export const script = [{
     'start': 117.54,
     'duration': 2.607
 }, {
-    'text': 'pulling not one but two all-nighters --',
+    'text': 'pulling not one but two all  nighters     ',
     'start': 120.171,
     'duration': 2.276
 }, {
-    'text': 'humans are not supposed to pull two all-nighters --',
+    'text': 'humans are not supposed to pull two all  nighters     ',
     'start': 122.471,
     'duration': 2.569
 }, {
@@ -255,7 +261,7 @@ export const script = [{
     'start': 172.803,
     'duration': 1.667
 }, {
-    'text': "Anyway, today I'm a writer-blogger guy.",
+    'text': "Anyway, today I'm a writer  blogger guy.",
     'start': 175.343,
     'duration': 3.408
 }, {
@@ -267,11 +273,11 @@ export const script = [{
     'start': 180.542,
     'duration': 3.736
 }, {
-    'text': 'My behavior has always perplexed the non-procrastinators around me,',
+    'text': 'My behavior has always perplexed the non  procrastinators around me,',
     'start': 184.302,
     'duration': 3.284
 }, {
-    'text': 'and I wanted to explain to the non-procrastinators of the world',
+    'text': 'and I wanted to explain to the non  procrastinators of the world',
     'start': 187.61,
     'duration': 3.688
 }, {
@@ -303,7 +309,7 @@ export const script = [{
     'start': 203.913,
     'duration': 2.432
 }, {
-    'text': 'and the brain of a proven non-procrastinator,',
+    'text': 'and the brain of a proven non  procrastinator,',
     'start': 206.369,
     'duration': 2.655
 }, {
@@ -327,7 +333,7 @@ export const script = [{
     'start': 218.631,
     'duration': 2.263
 }, {
-    'text': "So here's the brain of a non-procrastinator.",
+    'text': "So here's the brain of a non  procrastinator.",
     'start': 220.918,
     'duration': 2.128
 },  {
@@ -343,7 +349,7 @@ export const script = [{
     'start': 235.713,
     'duration': 1.564
 }, {
-    'text': 'Both brains have a Rational Decision-Maker in them,',
+    'text': 'Both brains have a Rational Decision  Maker in them,',
     'start': 237.904,
     'duration': 2.388
 }, {
@@ -367,7 +373,7 @@ export const script = [{
     'start': 249.793,
     'duration': 2.622
 }, {
-    'text': 'So the Rational Decision-Maker will make the rational decision',
+    'text': 'So the Rational Decision  Maker will make the rational decision',
     'start': 252.439,
     'duration': 2.933
 }, {
@@ -395,7 +401,7 @@ export const script = [{
     'start': 265.887,
     'duration': 2.131
 },  {
-    'text': 'Then --',
+    'text': 'Then     ',
     'start': 269.082,
     'duration': 1.158
 },  {
@@ -487,7 +493,7 @@ export const script = [{
     'start': 329.969,
     'duration': 2.094
 }, {
-    'text': 'You have to keep well-slept, well-fed and propagating into the next generation,',
+    'text': 'You have to keep well  slept, well  fed and propagating into the next generation,',
     'start': 332.087,
     'duration': 4.506
 }, {
@@ -507,7 +513,7 @@ export const script = [{
     'start': 345.958,
     'duration': 2.281
 }, {
-    'text': 'the Rational Decision-Maker,',
+    'text': 'the Rational Decision  Maker,',
     'start': 348.263,
     'duration': 2.365
 }, {
@@ -523,7 +529,7 @@ export const script = [{
     'start': 355.648,
     'duration': 1.752
 }, {
-    'text': 'We can make long-term plans.',
+    'text': 'We can make long  term plans.',
     'start': 357.424,
     'duration': 1.35
 }, {
@@ -551,7 +557,7 @@ export const script = [{
     'start': 370.291,
     'duration': 2.151
 }, {
-    'text': 'or enjoying well-earned leisure time.',
+    'text': 'or enjoying well  earned leisure time.',
     'start': 372.466,
     'duration': 1.828
 }, {
@@ -623,7 +629,7 @@ export const script = [{
     'start': 418.332,
     'duration': 2.483
 }, {
-    'text': 'and the air is filled with guilt, dread, anxiety, self-hatred --',
+    'text': 'and the air is filled with guilt, dread, anxiety, self  hatred     ',
     'start': 420.839,
     'duration': 3.215
 }, {
@@ -651,7 +657,7 @@ export const script = [{
     'start': 442.186,
     'duration': 3.208
 }, {
-    'text': 'in his darkest moments --',
+    'text': 'in his darkest moments     ',
     'start': 445.418,
     'duration': 1.43
 }, {
@@ -703,7 +709,7 @@ export const script = [{
     'start': 504.203,
     'duration': 1.969
 }, {
-    'text': 'the Rational Decision-Maker seemed to have something else on his mind.',
+    'text': 'the Rational Decision  Maker seemed to have something else on his mind.',
     'start': 506.196,
     'duration': 3.301
 }, {
@@ -767,7 +773,7 @@ export const script = [{
     'start': 559.904,
     'duration': 2.746
 },  {
-    'text': "And the Monkey -- remember, he's terrified of the Panic Monster --",
+    'text': "And the Monkey remember, he's terrified of the Panic Monster     ",
     'start': 567.511,
     'duration': 3.101
 }, {
@@ -779,7 +785,7 @@ export const script = [{
     'start': 571.818,
     'duration': 1.151
 }, {
-    'text': 'finally, the Rational Decision-Maker can take the wheel',
+    'text': 'finally, the Rational Decision Maker can take the wheel',
     'start': 572.993,
     'duration': 2.596
 }, {
@@ -811,7 +817,7 @@ export const script = [{
     'start': 592.193,
     'duration': 3.096
 }, {
-    'text': 'And this entire situation, with the three characters --',
+    'text': 'And this entire situation, with the three characters   ',
     'start': 596.385,
     'duration': 2.982
 }, {
@@ -923,11 +929,11 @@ export const script = [{
     'start': 672.306,
     'duration': 2.487
 }, {
-    'text': "So if you wanted a career where you're a self-starter --",
+    'text': "So if you wanted a career where you're a self starter   ",
     'start': 674.817,
     'duration': 2.69
 }, {
-    'text': 'something in the arts, something entrepreneurial --',
+    'text': 'something in the arts, something entrepreneurial   ',
     'start': 677.531,
     'duration': 2.413
 }, {
@@ -971,7 +977,7 @@ export const script = [{
     'start': 704.76,
     'duration': 1.885
 }, {
-    'text': 'because in all of these non-deadline situations,',
+    'text': 'because in all of these non deadline situations,',
     'start': 706.669,
     'duration': 2.8
 }, {
@@ -991,7 +997,7 @@ export const script = [{
     'start': 715.343,
     'duration': 1.74
 }, {
-    'text': "And it's this long-term kind of procrastination",
+    'text': "And it's this long term kind of procrastination",
     'start': 717.953,
     'duration': 2.74
 }, {
@@ -999,7 +1005,7 @@ export const script = [{
     'start': 720.717,
     'duration': 3.081
 }, {
-    'text': 'than the funnier, short-term deadline-based kind.',
+    'text': 'than the funnier, short term deadline based kind.',
     'start': 723.822,
     'duration': 2.901
 }, {
@@ -1011,7 +1017,7 @@ export const script = [{
     'start': 730.816,
     'duration': 1.154
 }, {
-    'text': 'of a huge amount of long-term unhappiness, and regrets.',
+    'text': 'of a huge amount of long term unhappiness, and regrets.',
     'start': 731.994,
     'duration': 3.735
 }, {
@@ -1027,7 +1033,7 @@ export const script = [{
     'start': 741.998,
     'duration': 2.744
 }, {
-    'text': "It's that long-term procrastination has made them feel like a spectator,",
+    'text': "It's that long term procrastination has made them feel like a spectator,",
     'start': 744.766,
     'duration': 3.421
 }, {
@@ -1043,15 +1049,15 @@ export const script = [{
     'start': 753.6,
     'duration': 3.089
 }, {
-    'text': 'So I read these emails and I had a little bit of an epiphany --',
+    'text': 'So I read these emails and I had a little bit of an epiphany   ',
     'start': 756.713,
     'duration': 4.183
 }, {
-    'text': "that I don't think non-procrastinators exist.",
+    'text': "that I don't think non procrastinators exist.",
     'start': 762.182,
     'duration': 3.4
 }, {
-    'text': "That's right -- I think all of you are procrastinators.",
+    'text': "That's right    I think all of you are procrastinators.",
     'start': 765.979,
     'duration': 3.236
 }, {
@@ -1083,7 +1089,7 @@ export const script = [{
     'start': 785.305,
     'duration': 2.373
 }, {
-    'text': "That's one box for every week of a 90-year life.",
+    'text': "That's one box for every week of a 90 year life.",
     'start': 788.352,
     'duration': 4.279
 }, {

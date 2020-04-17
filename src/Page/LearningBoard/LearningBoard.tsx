@@ -2,21 +2,31 @@ import React, { useRef, useState } from "react";
 import "./learning-board.scss";
 import Youtube from "react-youtube";
 import ReactPlayer from "react-player";
-import { Button, Form, Alert } from "react-bootstrap";
+import { Button, Form, Alert, ProgressBar, Fade } from "react-bootstrap";
 import { script } from "./testscript";
 interface LearningBoardProps {}
 
 export default function LearningBoard({}: LearningBoardProps) {
+  const sentences = script.length;
+
+  const [showLaBtn, setShowLaBtn] = useState(false);
+
   const [currentPhaseIndex, setCPI] = useState(0);
+
+  const [rightSentences, setRightSentences] = useState(0);
+
+  const [skipped, setSkipped] = useState(0);
 
   const [popWord, setPopWord] = useState("");
 
   const [revealedIdex, setRevealedIndex] = useState(0);
 
-  const [correct, setCorrect] = useState<boolean | undefined>(undefined);
+  const [correct, setCorrect] = useState(0);
 
   const [played, setPlayed] = useState(0);
 
+  let classes = showLaBtn ? "laBtn" : "laBtn hide";
+  
   let myPlayer: ReactPlayer;
 
   const [inputValue, setInputValue] = useState("");
@@ -36,6 +46,7 @@ export default function LearningBoard({}: LearningBoardProps) {
       script[currentPhaseIndex + 1].text
         .replace(/[^\w\s]/gi, "")
         .toLowerCase()
+        .trim()
         .split(" ")
     );
   };
@@ -46,19 +57,38 @@ export default function LearningBoard({}: LearningBoardProps) {
     setPlaying(true);
   };
 
+  const handleHint = () => {
+    setPopWord(currentSentence.shift() || "");
+    setCurrentSentence(currentSentence);
+    setCorrect(3);
+    setRevealedIndex(revealedIdex + 1);
+    if (currentSentence.length === 0) {
+      handleNxSentence();
+      setRightSentences(rightSentences + 1);
+    }
+  };
+
   const [currentSentence, setCurrentSentence] = useState(
     script[currentPhaseIndex].text
       .replace(/[^\w\s]/gi, "")
+      .trim()
       .toLowerCase()
       .split(" ")
   );
 
   const handleOnProgess = (state: any) => {
-    let sentenceDur = script[currentPhaseIndex].duration;
-    console.log(state.playedSeconds - sentenceDur - script[currentPhaseIndex].start);
-    if (state.playedSeconds > sentenceDur + script[currentPhaseIndex].start) {
-        setPlaying(false);
+    if(state.playedSeconds >  script[0].start) {
+        setShowLaBtn(true);
     }
+    let sentenceDur = script[currentPhaseIndex].duration;
+    if (state.playedSeconds > sentenceDur + script[currentPhaseIndex].start) {
+      setPlaying(false);
+    }
+  };
+
+  const handleSkip = () => {
+    handleNxSentence();
+    setSkipped(skipped + 1);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -70,14 +100,17 @@ export default function LearningBoard({}: LearningBoardProps) {
       if (inputWord == currentSentence[0]) {
         setPopWord(currentSentence.shift() || "");
         setCurrentSentence(currentSentence);
-        setCorrect(true);
+        setCorrect(1);
         setInputValue("");
-        setRevealedIndex(revealedIdex+1);
+        setRevealedIndex(revealedIdex + 1);
       } else {
-        setCorrect(false);
+        setCorrect(2);
         setInputValue("");
       }
-      if (currentSentence.length === 0) handleNxSentence();
+      if (currentSentence.length === 0) {
+        handleNxSentence();
+        setRightSentences(rightSentences + 1);
+      }
     }
   };
 
@@ -85,26 +118,66 @@ export default function LearningBoard({}: LearningBoardProps) {
     <div className="learnBoard">
       <div className="ytPlayer">
         <ReactPlayer
-            onPlay ={()=> setPlaying(true)}
+          onPlay={() => setPlaying(true)}
           ref={ref}
           onReady={() => setPlayed(0)}
           progressInterval={0.05}
           onProgress={handleOnProgess}
           playing={playing}
-          url="https://www.youtube.com/watch?v=arj7oStGLkU"
+          url="https://www.youtube.com/watch?v=arj7oStGLkU?rel=0"
           controls={false}
         />
         <p>This is learning board</p>
       </div>
-      <Button onClick={handleNxSentence}> Next sentence</Button>
-  { (correct === undefined) ? null : (correct === true) ? <Alert variant="success">Correct it's the word "{popWord}"</Alert> : <Alert variant="danger"> Incorrect!</Alert>}
-      <Button onClick={handleListen}> Listen</Button>
+      <Button onClick={handleSkip}> Next sentence</Button>
+      
+      {correct === 0 ? null : correct === 1 ? (
+        <Fade in={true}>
+            <Alert variant="success">Correct it's the word "{popWord}"</Alert>
+        </Fade>
+      ) : correct === 2 ? (
+        <Fade in={true}>
+            <Alert variant="danger"> Incorrect!</Alert>
+        </Fade>
+      ) : (
+        <Fade in={true}>
+            <Alert variant="warning"> It was the word "{popWord}" </Alert>
+        </Fade>
+      )}
+      
+      
+      <Button onClick={handleListen} className={classes}> Listen Again</Button>
+      
+      
+      <Button onClick={handleHint}> Hint a word</Button>
+      
       <Form.Control
         type="text"
         value={inputValue}
         onChange={handleInputChange}
       />
-      <Form.Control type="text" value={script[currentPhaseIndex].text.split(" ").slice(0,revealedIdex).join(" ")} />
+      
+      <Form.Control
+        className="curLine"
+        type="text"
+        value={
+          script[currentPhaseIndex].text
+            .split(" ")
+            .slice(0, revealedIdex)
+            .join(" ") +
+          " " +
+          script[currentPhaseIndex].text
+            .split(" ")
+            .slice(revealedIdex)
+            .map((word) => word.replace(/[^\w\s]/gi, "").replace(/\w/gi, "*"))
+            .join("  ")
+        }
+      />
+      <ProgressBar
+        variant="success"
+        animated
+        now={((rightSentences + skipped) / sentences) * 100}
+      />
     </div>
   );
 }

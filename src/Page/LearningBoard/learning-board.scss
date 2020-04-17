@@ -1,3 +1,22 @@
 .learning-board {}
 
 .ytPlayer {}
+
+// .curLine {
+//     color: transparent;
+//     text-shadow: 0 0 0 black;
+//     &:focus {
+//         outline: none;
+//         color: transparent;
+//         text-shadow: 0 0 0 black;
+//     }
+// }
+.laBtn {
+    transition: opacity 0.5s;
+    opacity: 1;
+}
+
+.laBtn.hide {
+    opacity: 0;
+    pointer-events: none;
+}
