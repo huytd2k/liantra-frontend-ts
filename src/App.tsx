@@ -16,6 +16,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
+import LearningBoard from "./Page/LearningBoard";
 
 const client = new ApolloClient({
   link: ApolloLink.from([
@@ -55,6 +56,9 @@ function App() {
                   </Route>
                   <Route path="/feed">
                     <TapeFeed />
+                  </Route>
+                  <Route path="/learn">
+                    <LearningBoard />
                   </Route>
                 </Switch>
               </header>
