@@ -10,13 +10,15 @@ import FrontPage from "./Page/FrontPage";
 import TapeFeed from "./Page/TapeFeed";
 import TapePage from "./Page/TapePage";
 
-
-import { ApolloClient } from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpLink } from 'apollo-link-http';
-import { onError } from 'apollo-link-error';
-import { ApolloLink } from 'apollo-link';
+import { ApolloClient } from "apollo-client";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { HttpLink } from "apollo-link-http";
+import { onError } from "apollo-link-error";
+import { ApolloLink } from "apollo-link";
 import LearningBoard from "./Page/LearningBoard";
+import ProfilePage from "./Page/ProfilePage";
+import LoginPage from "./Page/LoginPage";
+import RegisterPage from "./Page/RegisterPage";
 
 const client = new ApolloClient({
   link: ApolloLink.from([
@@ -24,19 +26,18 @@ const client = new ApolloClient({
       if (graphQLErrors)
         graphQLErrors.forEach(({ message, locations, path }) =>
           console.log(
-            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-          ),
+            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+          )
         );
       if (networkError) console.log(`[Network error]: ${networkError}`);
     }),
     new HttpLink({
-      uri: 'http://localhost:8000/graphql',
-      credentials: 'include',
-    })
+      uri: "http://localhost:8000/graphql",
+      credentials: "include",
+    }),
   ]),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
-
 
 function App() {
   return (
@@ -46,19 +47,32 @@ function App() {
           <Router>
             <div className="App">
               <header className="App-header">
-                <NavBar />
                 <Switch>
+                  <Route exact path="/login">
+                    <LoginPage/>
+                  </Route>
+                  <Route exact path="/register">
+                    <RegisterPage/>
+                  </Route>
                   <Route exact path="/">
+                    <NavBar />
                     <FrontPage />
                   </Route>
                   <Route path="/tape">
+                    <NavBar />
                     <TapePage />
                   </Route>
                   <Route path="/feed">
+                    <NavBar />
                     <TapeFeed />
                   </Route>
                   <Route path="/learn">
+                    <NavBar />
                     <LearningBoard />
+                  </Route>
+                  <Route path="/profile">
+                    <NavBar />
+                    <ProfilePage />
                   </Route>
                 </Switch>
               </header>

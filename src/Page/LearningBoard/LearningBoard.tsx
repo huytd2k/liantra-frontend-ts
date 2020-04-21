@@ -1,13 +1,40 @@
-import React, { useRef, useState } from "react";
-import "./learning-board.scss";
-import Youtube from "react-youtube";
+import React, { useState, useRef } from "react";
+import {
+  Alert,
+  Button,
+  Form,
+  ProgressBar,
+  Container,
+  Row,
+  Col,
+  Badge,
+  ButtonGroup,
+  InputGroup,
+  Modal,
+} from "react-bootstrap";
 import ReactPlayer from "react-player";
-import { Button, Form, Alert, ProgressBar, Fade } from "react-bootstrap";
+import "./learning-board.scss";
 import { script } from "./testscript";
+import EmojiObjectsIcon from "@material-ui/icons/EmojiObjects";
+import { Typography, Slider } from "@material-ui/core";
+import SentenceCard from "../../Component/SentenceCard";
 interface LearningBoardProps {}
 
+interface PassStc {
+  text: string;
+  skipped: boolean;
+}
+
 export default function LearningBoard({}: LearningBoardProps) {
+  const sPref = useRef<HTMLDivElement>(null);
+
   const sentences = script.length;
+
+  const [showFinishedModal, toogleFinishedModel] = useState(false);
+
+  const [passSentence, setPassSentence] = useState<Array<PassStc>>([]);
+
+  const [showStartBtn, setShowStartBtn] = useState(true);
 
   const [showLaBtn, setShowLaBtn] = useState(false);
 
@@ -25,8 +52,12 @@ export default function LearningBoard({}: LearningBoardProps) {
 
   const [played, setPlayed] = useState(0);
 
-  let classes = showLaBtn ? "laBtn" : "laBtn hide";
-  
+  let laBtnClasses = showLaBtn ? "laBtn" : "laBtn hide";
+
+  let startBtnClasses = showStartBtn ? "startBtn" : "startBtn hide";
+
+  let showInputClasses = showStartBtn ? "inputPanel hide" : "inputPanel";
+
   let myPlayer: ReactPlayer;
 
   const [inputValue, setInputValue] = useState("");
@@ -35,8 +66,18 @@ export default function LearningBoard({}: LearningBoardProps) {
     myPlayer = player;
   };
 
+  const handleCompleted = () => {
+    toogleFinishedModel(true);
+  };
+
   const [playing, setPlaying] = useState(false);
   const handleNxSentence = () => {
+    /// Scroll sentence panel to bottom
+    if (currentPhaseIndex == script.length - 1) {
+      handleCompleted();
+      return;
+    }
+    setPassSentence(passSentence);
     setRevealedIndex(0);
     setCPI(currentPhaseIndex + 1);
     let sentenceStart = script[currentPhaseIndex + 1].start;
@@ -77,8 +118,8 @@ export default function LearningBoard({}: LearningBoardProps) {
   );
 
   const handleOnProgess = (state: any) => {
-    if(state.playedSeconds >  script[0].start) {
-        setShowLaBtn(true);
+    if (state.playedSeconds > script[0].start) {
+      setShowLaBtn(true);
     }
     let sentenceDur = script[currentPhaseIndex].duration;
     if (state.playedSeconds > sentenceDur + script[currentPhaseIndex].start) {
@@ -87,12 +128,13 @@ export default function LearningBoard({}: LearningBoardProps) {
   };
 
   const handleSkip = () => {
+    passSentence.push({ text: script[currentPhaseIndex].text, skipped: true });
     handleNxSentence();
     setSkipped(skipped + 1);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(currentSentence);
+    sPref.current!.scrollTop = sPref.current!.scrollHeight;
     setInputValue(e.target.value);
     let inputWord = e.target.value;
     if (inputWord.match(/\s/g)) {
@@ -108,6 +150,10 @@ export default function LearningBoard({}: LearningBoardProps) {
         setInputValue("");
       }
       if (currentSentence.length === 0) {
+        passSentence.push({
+          text: script[currentPhaseIndex].text,
+          skipped: false,
+        });
         handleNxSentence();
         setRightSentences(rightSentences + 1);
       }
@@ -115,69 +161,190 @@ export default function LearningBoard({}: LearningBoardProps) {
   };
 
   return (
-    <div className="learnBoard">
-      <div className="ytPlayer">
-        <ReactPlayer
-          onPlay={() => setPlaying(true)}
-          ref={ref}
-          onReady={() => setPlayed(0)}
-          progressInterval={0.05}
-          onProgress={handleOnProgess}
-          playing={playing}
-          url="https://www.youtube.com/watch?v=arj7oStGLkU?rel=0"
-          controls={false}
+    <Container fluid className="learningBoard">
+      <Modal show={showFinishedModal}>
+        <Modal.Header>You have finished !</Modal.Header>
+        <Modal.Body>
+        <div className="statusPanel">
+            <Typography id="continous-slider" gutterBottom>
+              <Badge variant="primary">
+                Completed sentences {rightSentences + skipped}/{script.length}
+              </Badge>
+            </Typography>
+            <Typography id="continous-slider" gutterBottom>
+              <Badge variant="success">
+                Correct sentences {rightSentences}/{script.length}
+              </Badge>
+            </Typography>
+            <Typography id="continous-slider" gutterBottom>
+              <Badge variant="danger">
+                Skipped sentences {skipped}/{script.length}
+              </Badge>
+            </Typography>
+            <Typography id="continous-slider" gutterBottom>
+              <Badge variant="warning">Hinted words 0</Badge>
+            </Typography>
+          </div>
+          <Button>Save this session</Button>
+        </Modal.Body>
+      </Modal>
+      <Row>
+        <Col>
+          <div ref={sPref} className="sentencePanel">
+            {passSentence.map((line, index) => (
+              <SentenceCard
+                index={index}
+                key={index}
+                text={line.text}
+                variant={line.skipped}
+              />
+            ))}
+          </div>
+        </Col>
+        <Col xs={10.5}>
+          <div className="ytPlayer">
+            <ReactPlayer
+              onPlay={() => {
+                setPlaying(true);
+                setShowStartBtn(false);
+              }}
+              ref={ref}
+              onReady={() => setPlayed(0)}
+              progressInterval={0.05}
+              onProgress={handleOnProgess}
+              playing={playing}
+              url="https://www.youtube.com/watch?v=arj7oStGLkU?rel=0"
+              controls={false}
+            />
+          </div>
+        </Col>
+        <Col>
+          <div className="controlPanel">
+            <div className="volumePanel">
+              <Typography id="continous-slider" gutterBottom>
+                Volume
+              </Typography>
+              <Slider></Slider>
+            </div>
+            <div className="ratePanel">
+              <Typography id="continous-slider" gutterBottom>
+                Video speed
+              </Typography>
+              <ButtonGroup aria-label="Basic example">
+                <Button variant="outline-primary"> 0.5</Button>
+                <Button variant="outline-primary">0.75</Button>
+                <Button variant="outline-primary">Standard</Button>
+                <Button variant="outline-primary">1.25</Button>
+                <Button variant="outline-primary">1.5</Button>
+              </ButtonGroup>
+            </div>
+            <div className="statusPanel">
+              <Typography id="continous-slider" gutterBottom>
+                <Badge variant="primary">
+                  Completed sentences {rightSentences + skipped}/{script.length}
+                </Badge>
+              </Typography>
+              <Typography id="continous-slider" gutterBottom>
+                <Badge variant="success">
+                  Correct sentences {rightSentences}/{script.length}
+                </Badge>
+              </Typography>
+              <Typography id="continous-slider" gutterBottom>
+                <Badge variant="danger">
+                  Skipped sentences {skipped}/{script.length}
+                </Badge>
+              </Typography>
+              <Typography id="continous-slider" gutterBottom>
+                <Badge variant="warning">Hinted words 0</Badge>
+              </Typography>
+            </div>
+          </div>
+        </Col>
+      </Row>
+
+      <div className="processBar">
+        <ProgressBar
+          variant="success"
+          animated
+          now={((rightSentences + skipped) / sentences) * 100}
         />
-        <p>This is learning board</p>
       </div>
-      <Button onClick={handleSkip}> Next sentence</Button>
-      
+      <Button
+        className={startBtnClasses}
+        onClick={() => {
+          setShowStartBtn(false);
+          setPlaying(true);
+        }}
+      >
+        {" "}
+        Start learning{" "}
+      </Button>
+
+      <div className={showInputClasses}>
+        <Form.Label>Current sentence</Form.Label>
+        <Form.Control
+          className="curLine"
+          type="text"
+          value={
+            script[currentPhaseIndex].text
+              .split(" ")
+              .slice(0, revealedIdex)
+              .join(" ") +
+            " " +
+            script[currentPhaseIndex].text
+              .split(" ")
+              .slice(revealedIdex)
+              .map((word) => word.replace(/[^\w\s]/gi, "").replace(/\w/gi, "*"))
+              .join("  ")
+          }
+        />
+        <Button onClick={handleListen} className={laBtnClasses}>
+          Listen Again
+        </Button>
+        <Form.Label className="guessLabel">Type your guess here:</Form.Label>
+        <InputGroup>
+          <InputGroup.Prepend>
+            <Button className="skipBtn" variant="warning" onClick={handleSkip}>
+              Skip sentence
+            </Button>
+          </InputGroup.Prepend>
+          <Form.Control
+            className="inputLine"
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+          />
+          <InputGroup.Append>
+            <Button
+              className="hintBtn"
+              variant="outline-success"
+              onClick={handleHint}
+            >
+              <EmojiObjectsIcon />
+              Hint a word
+            </Button>
+          </InputGroup.Append>
+        </InputGroup>
+      </div>
+      <LearnAlert {...{ correct, popWord }} />
+    </Container>
+  );
+}
+interface alertProps {
+  correct: number;
+  popWord?: string;
+}
+
+function LearnAlert({ correct, popWord }: alertProps) {
+  return (
+    <div>
       {correct === 0 ? null : correct === 1 ? (
-        <Fade in={true}>
-            <Alert variant="success">Correct it's the word "{popWord}"</Alert>
-        </Fade>
+        <Alert variant="success">Correct it's the word "{popWord}"</Alert>
       ) : correct === 2 ? (
-        <Fade in={true}>
-            <Alert variant="danger"> Incorrect!</Alert>
-        </Fade>
+        <Alert variant="danger"> Incorrect!</Alert>
       ) : (
-        <Fade in={true}>
-            <Alert variant="warning"> It was the word "{popWord}" </Alert>
-        </Fade>
+        <Alert variant="warning"> It was the word "{popWord}" </Alert>
       )}
-      
-      
-      <Button onClick={handleListen} className={classes}> Listen Again</Button>
-      
-      
-      <Button onClick={handleHint}> Hint a word</Button>
-      
-      <Form.Control
-        type="text"
-        value={inputValue}
-        onChange={handleInputChange}
-      />
-      
-      <Form.Control
-        className="curLine"
-        type="text"
-        value={
-          script[currentPhaseIndex].text
-            .split(" ")
-            .slice(0, revealedIdex)
-            .join(" ") +
-          " " +
-          script[currentPhaseIndex].text
-            .split(" ")
-            .slice(revealedIdex)
-            .map((word) => word.replace(/[^\w\s]/gi, "").replace(/\w/gi, "*"))
-            .join("  ")
-        }
-      />
-      <ProgressBar
-        variant="success"
-        animated
-        now={((rightSentences + skipped) / sentences) * 100}
-      />
     </div>
   );
 }

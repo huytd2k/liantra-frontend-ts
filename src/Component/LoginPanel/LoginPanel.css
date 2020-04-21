@@ -1,4 +1,28 @@
 .loginPanel {
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 4rem;
+    background-color: #f3f5f7;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mainLoginForm {
+    background-color: #fff;
+    padding: 2rem 2rem 1rem;
+    width: 500px;
+    border-radius: 5px;
+}
+
+.signInSubmitBtn {
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+.registerLink:hover {
+    text-decoration: none;
+    color: #1e3433 !important;
+}
+
+.registerLink {
+    color: #3f7573;
 }

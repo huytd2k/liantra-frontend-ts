@@ -56,10 +56,10 @@ export default function NavBar() {
 function PreLoginNav() {
   return (
     <div>
-      <Link to="#" className="signUpButton">
+      <Link to="/register" className="signUpButton">
         Sign Up
       </Link>
-      <Link to="#" className="signInButton">
+      <Link to="/learn" className="signInButton">
         Sign In
       </Link>
     </div>
@@ -75,8 +75,8 @@ function PostLoginNav({ me }: UserResponseData) {
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Dropdown.Item onClick={ () => { logOut(); window.location.reload()} } href="#/action-1">Profile</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">Log Out</Dropdown.Item>
+        <Dropdown.Item href="#/action-3">Profile</Dropdown.Item>
+        <Dropdown.Item onClick={ () => { logOut(); window.location.reload()} } href="#/action-1">Log out</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

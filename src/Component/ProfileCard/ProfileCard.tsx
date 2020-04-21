@@ -7,22 +7,8 @@ interface ProfileCardProps {
 
 export default function ProfileCard({ }: ProfileCardProps) {
     return (
-        <Card className="profileCard">
-            <Card.Title> huytran2khust</Card.Title>
-            <ButtonGroup vertical>
-                <Button>
-                    Profile
-                    </Button>
-                <Button>
-                    
-                    </Button>
-                <Button>
-                    Some btn
-                    </Button>
-                <Button>
-                    Some btn
-                    </Button>
-            </ButtonGroup>
-        </Card>
+        <div className="profileCard">
+            <h1> Huy Tran.D</h1>
+        </div>
     )
 }
