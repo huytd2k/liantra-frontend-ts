@@ -23,10 +23,15 @@ interface LearningBoardProps {}
 interface PassStc {
   text: string;
   skipped: boolean;
+  hintedIndex?: number[];
 }
 
 export default function LearningBoard({}: LearningBoardProps) {
   const sPref = useRef<HTMLDivElement>(null);
+
+  const [ backed, setBacked ] = useState(-1);
+
+  const [ hintedIndex, setHintedIndex ] = useState<number[]>([]);
 
   const sentences = script.length;
 
@@ -92,7 +97,17 @@ export default function LearningBoard({}: LearningBoardProps) {
     );
   };
 
+  const handlePlayAgain = (stcIndex: number) => {
+    return () => {
+      setPlaying(true);
+      setBacked(stcIndex);
+    myPlayer.seekTo(script[stcIndex].start -.25, "seconds")}
+    ;
+    
+  }
+
   const handleListen = () => {
+    setBacked(-1);
     let sentenceStart = script[currentPhaseIndex].start;
     myPlayer.seekTo(sentenceStart - 0.5, "seconds");
     setPlaying(true);
@@ -102,8 +117,16 @@ export default function LearningBoard({}: LearningBoardProps) {
     setPopWord(currentSentence.shift() || "");
     setCurrentSentence(currentSentence);
     setCorrect(3);
+    hintedIndex.push(revealedIdex);
+    setHintedIndex(hintedIndex)
     setRevealedIndex(revealedIdex + 1);
     if (currentSentence.length === 0) {
+        passSentence.push({
+          text: script[currentPhaseIndex].text,
+          skipped: false,
+          hintedIndex: hintedIndex,
+        });
+      setHintedIndex([]);
       handleNxSentence();
       setRightSentences(rightSentences + 1);
     }
@@ -122,6 +145,10 @@ export default function LearningBoard({}: LearningBoardProps) {
       setShowLaBtn(true);
     }
     let sentenceDur = script[currentPhaseIndex].duration;
+    if(backed !== -1 && state.playedSeconds > script[backed].start + script[backed].duration) {
+      setPlaying(false);
+    }
+
     if (state.playedSeconds > sentenceDur + script[currentPhaseIndex].start) {
       setPlaying(false);
     }
@@ -134,6 +161,7 @@ export default function LearningBoard({}: LearningBoardProps) {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(hintedIndex);
     sPref.current!.scrollTop = sPref.current!.scrollHeight;
     setInputValue(e.target.value);
     let inputWord = e.target.value;
@@ -153,7 +181,9 @@ export default function LearningBoard({}: LearningBoardProps) {
         passSentence.push({
           text: script[currentPhaseIndex].text,
           skipped: false,
+          hintedIndex: hintedIndex,
         });
+        setHintedIndex([]);
         handleNxSentence();
         setRightSentences(rightSentences + 1);
       }
@@ -197,6 +227,8 @@ export default function LearningBoard({}: LearningBoardProps) {
                 key={index}
                 text={line.text}
                 variant={line.skipped}
+                hintedIndex={line.hintedIndex}
+                handlePlayAgain={handlePlayAgain(index)}
               />
             ))}
           </div>
@@ -214,7 +246,7 @@ export default function LearningBoard({}: LearningBoardProps) {
               onProgress={handleOnProgess}
               playing={playing}
               url="https://www.youtube.com/watch?v=arj7oStGLkU?rel=0"
-              controls={false}
+              controls={true}
             />
           </div>
         </Col>

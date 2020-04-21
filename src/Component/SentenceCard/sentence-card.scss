@@ -4,3 +4,18 @@
     padding: 5px 15px;
     margin: 10px;
 }
+
+.sentence-card:hover {}
+
+.hintedWord {
+    color: #8e474e;
+}
+
+.backwardBtn {
+    top: 0.65rem;
+    width: 1rem;
+    margin-left: 0.75rem;
+    &:hover {
+        cursor: pointer;
+    }
+}
