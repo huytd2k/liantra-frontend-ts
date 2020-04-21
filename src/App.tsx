@@ -1,7 +1,7 @@
 import { ApolloProvider } from "@apollo/react-hooks";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import NavBar from "./Component/NavBar";
 import { ShowLoginProvider } from "./Context/ShowLoginContext";
@@ -48,7 +48,7 @@ function App() {
             <div className="App">
               <header className="App-header">
                 <Switch>
-                  <Route exact path="/login">
+                  <Route exact path="#/login">
                     <LoginPage/>
                   </Route>
                   <Route exact path="/register">

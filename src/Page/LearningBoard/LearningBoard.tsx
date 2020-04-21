@@ -293,7 +293,6 @@ export default function LearningBoard({}: LearningBoardProps) {
           </div>
         </Col>
       </Row>
-            <h4>Current word has : {currentSentence[0].length} characters</h4>
       <div className="processBar">
         <ProgressBar
           variant="success"
@@ -313,6 +312,7 @@ export default function LearningBoard({}: LearningBoardProps) {
       </Button>
 
       <div className={showInputClasses}>
+            <h4>Current word has : {currentSentence[0].length} character(s)</h4>
         <Form.Label>Current sentence</Form.Label>
         <Form.Control
           className="curLine"
