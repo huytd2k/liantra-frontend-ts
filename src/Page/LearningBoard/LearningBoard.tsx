@@ -1,24 +1,17 @@
-import React, { useState, useRef } from "react";
-import {
-  Alert,
-  Button,
-  Form,
-  ProgressBar,
-  Container,
-  Row,
-  Col,
-  Badge,
-  ButtonGroup,
-  InputGroup,
-  Modal,
-} from "react-bootstrap";
+import { QuestionOutlined } from '@ant-design/icons';
+import { Typography } from "@material-ui/core";
+import { Button as Btn, Input, message } from "antd";
+import "antd/dist/antd.css";
+import React, { useRef, useState } from "react";
+import { Alert, Badge, Button, Col, Container, Form, Modal, ProgressBar, Row } from "react-bootstrap";
 import ReactPlayer from "react-player";
-import "./learning-board.scss";
-import { script } from "./testscript";
-import EmojiObjectsIcon from "@material-ui/icons/EmojiObjects";
-import { Typography, Slider } from "@material-ui/core";
 import SentenceCard from "../../Component/SentenceCard";
-interface LearningBoardProps {}
+import "./learning-board.scss";
+import {Tape, GET_TAPE_BY_ID_QUERY, GetTapeData} from '../../Model/Tape'
+import { useQuery } from '@apollo/react-hooks';
+interface LearningBoardProps {
+  data : GetTapeData;
+}
 
 interface PassStc {
   text: string;
@@ -26,14 +19,17 @@ interface PassStc {
   hintedIndex?: number[];
 }
 
-export default function LearningBoard({}: LearningBoardProps) {
+export default function LearningBoard({data}: LearningBoardProps) {
+  const script = data!.getTapebyId.script || [];
+  const link = data!.getTapebyId.ytUrl
+  console.log(data);
+
   const sPref = useRef<HTMLDivElement>(null);
 
-  const [ backed, setBacked ] = useState(-1);
+  const [backed, setBacked] = useState(-1);
 
-  const [ hintedIndex, setHintedIndex ] = useState<number[]>([]);
+  const [hintedIndex, setHintedIndex] = useState<number[]>([]);
 
-  const sentences = script.length;
 
   const [showFinishedModal, toogleFinishedModel] = useState(false);
 
@@ -75,6 +71,16 @@ export default function LearningBoard({}: LearningBoardProps) {
     toogleFinishedModel(true);
   };
 
+  const handleMessage = (correct: number, word: string | null) => {
+    if (correct === 1) {
+      message.success(`Correct! It's the word "${word}"`);
+    } else if (correct === 2) {
+      message.error(`Incorrect!`);
+    } else {
+      message.warning(`It was the word "${word}"`);
+    }
+  };
+
   const [playing, setPlaying] = useState(false);
   const handleNxSentence = () => {
     /// Scroll sentence panel to bottom
@@ -85,11 +91,11 @@ export default function LearningBoard({}: LearningBoardProps) {
     setPassSentence(passSentence);
     setRevealedIndex(0);
     setCPI(currentPhaseIndex + 1);
-    let sentenceStart = script[currentPhaseIndex + 1].start;
+    let sentenceStart = script![currentPhaseIndex + 1].start;
     myPlayer.seekTo(sentenceStart - 0.25, "seconds");
     setPlaying(true);
     setCurrentSentence(
-      script[currentPhaseIndex + 1].text
+      script[currentPhaseIndex + 1]!.text
         .replace(/[^\w\s]/gi, "")
         .toLowerCase()
         .trim()
@@ -101,31 +107,30 @@ export default function LearningBoard({}: LearningBoardProps) {
     return () => {
       setPlaying(true);
       setBacked(stcIndex);
-    myPlayer.seekTo(script[stcIndex].start -.25, "seconds")}
-    ;
-    
-  }
+      myPlayer.seekTo(script[stcIndex]!.start - 0.25, "seconds");
+    };
+  };
 
   const handleListen = () => {
     setBacked(-1);
-    let sentenceStart = script[currentPhaseIndex].start;
+    let sentenceStart = script[currentPhaseIndex]!.start;
     myPlayer.seekTo(sentenceStart - 0.5, "seconds");
     setPlaying(true);
   };
 
   const handleHint = () => {
-    setPopWord(currentSentence.shift() || "");
+    handleMessage(3, currentSentence.shift() || "");
     setCurrentSentence(currentSentence);
     setCorrect(3);
     hintedIndex.push(revealedIdex);
-    setHintedIndex(hintedIndex)
+    setHintedIndex(hintedIndex);
     setRevealedIndex(revealedIdex + 1);
     if (currentSentence.length === 0) {
-        passSentence.push({
-          text: script[currentPhaseIndex].text,
-          skipped: false,
-          hintedIndex: hintedIndex,
-        });
+      passSentence.push({
+        text: script[currentPhaseIndex]!.text,
+        skipped: false,
+        hintedIndex: hintedIndex,
+      });
       setHintedIndex([]);
       handleNxSentence();
       setRightSentences(rightSentences + 1);
@@ -145,7 +150,10 @@ export default function LearningBoard({}: LearningBoardProps) {
       setShowLaBtn(true);
     }
     let sentenceDur = script[currentPhaseIndex].duration;
-    if(backed !== -1 && state.playedSeconds > script[backed].start + script[backed].duration) {
+    if (
+      backed !== -1 &&
+      state.playedSeconds > script[backed].start + script[backed].duration
+    ) {
       setPlaying(false);
     }
 
@@ -160,7 +168,7 @@ export default function LearningBoard({}: LearningBoardProps) {
     setSkipped(skipped + 1);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(hintedIndex);
     sPref.current!.scrollTop = sPref.current!.scrollHeight;
     setInputValue(e.target.value);
@@ -168,12 +176,13 @@ export default function LearningBoard({}: LearningBoardProps) {
     if (inputWord.match(/\s/g)) {
       inputWord = inputWord.replace(/\s/g, "").toLowerCase();
       if (inputWord == currentSentence[0]) {
-        setPopWord(currentSentence.shift() || "");
+        handleMessage(1, currentSentence.shift() || "");
         setCurrentSentence(currentSentence);
         setCorrect(1);
         setInputValue("");
         setRevealedIndex(revealedIdex + 1);
       } else {
+        handleMessage(2, null);
         setCorrect(2);
         setInputValue("");
       }
@@ -189,13 +198,12 @@ export default function LearningBoard({}: LearningBoardProps) {
       }
     }
   };
-
   return (
     <Container fluid className="learningBoard">
       <Modal show={showFinishedModal}>
         <Modal.Header>You have finished !</Modal.Header>
         <Modal.Body>
-        <div className="statusPanel">
+          <div className="statusPanel">
             <Typography id="continous-slider" gutterBottom>
               <Badge variant="primary">
                 Completed sentences {rightSentences + skipped}/{script.length}
@@ -245,31 +253,13 @@ export default function LearningBoard({}: LearningBoardProps) {
               progressInterval={0.05}
               onProgress={handleOnProgess}
               playing={playing}
-              url="https://www.youtube.com/watch?v=arj7oStGLkU?rel=0"
+              url={link}
               controls={true}
             />
           </div>
         </Col>
         <Col>
           <div className="controlPanel">
-            <div className="volumePanel">
-              <Typography id="continous-slider" gutterBottom>
-                Volume
-              </Typography>
-              <Slider></Slider>
-            </div>
-            <div className="ratePanel">
-              <Typography id="continous-slider" gutterBottom>
-                Video speed
-              </Typography>
-              <ButtonGroup aria-label="Basic example">
-                <Button variant="outline-primary"> 0.5</Button>
-                <Button variant="outline-primary">0.75</Button>
-                <Button variant="outline-primary">Standard</Button>
-                <Button variant="outline-primary">1.25</Button>
-                <Button variant="outline-primary">1.5</Button>
-              </ButtonGroup>
-            </div>
             <div className="statusPanel">
               <Typography id="continous-slider" gutterBottom>
                 <Badge variant="primary">
@@ -297,7 +287,7 @@ export default function LearningBoard({}: LearningBoardProps) {
         <ProgressBar
           variant="success"
           animated
-          now={((rightSentences + skipped) / sentences) * 100}
+          now={((rightSentences + skipped) / script.length) * 100}
         />
       </div>
       <Button
@@ -312,7 +302,7 @@ export default function LearningBoard({}: LearningBoardProps) {
       </Button>
 
       <div className={showInputClasses}>
-            <h4>Current word has : {currentSentence[0].length} character(s)</h4>
+        <h4>Current word has : {currentSentence[0].length} character(s)</h4>
         <Form.Label>Current sentence</Form.Label>
         <Form.Control
           className="curLine"
@@ -330,53 +320,30 @@ export default function LearningBoard({}: LearningBoardProps) {
               .join("  ")
           }
         />
-        <Button onClick={handleListen} className={laBtnClasses}>
+        <Btn onClick={handleListen} className={laBtnClasses}>
           Listen Again
-        </Button>
+        </Btn>
         <Form.Label className="guessLabel">Type your guess here:</Form.Label>
-        <InputGroup>
-          <InputGroup.Prepend>
-            <Button className="skipBtn" variant="warning" onClick={handleSkip}>
-              Skip sentence
-            </Button>
-          </InputGroup.Prepend>
-          <Form.Control
+        <div className="mainInput">
+          <Btn type="primary" className="skipBtn" onClick={handleSkip}>
+            Skip sentence
+          </Btn>
+          <Input
             className="inputLine"
             type="text"
             value={inputValue}
             onChange={handleInputChange}
           />
-          <InputGroup.Append>
-            <Button
-              className="hintBtn"
-              variant="outline-success"
-              onClick={handleHint}
-            >
-              <EmojiObjectsIcon />
-              Hint a word
-            </Button>
-          </InputGroup.Append>
-        </InputGroup>
+          <Btn
+          icon={<QuestionOutlined />}
+          type="primary"
+            className="hintBtn"
+            onClick={handleHint}
+          >
+            Hint a word
+          </Btn>
+        </div>
       </div>
-      <LearnAlert {...{ correct, popWord }} />
     </Container>
-  );
-}
-interface alertProps {
-  correct: number;
-  popWord?: string;
-}
-
-function LearnAlert({ correct, popWord }: alertProps) {
-  return (
-    <div>
-      {correct === 0 ? null : correct === 1 ? (
-        <Alert variant="success">Correct it's the word "{popWord}"</Alert>
-      ) : correct === 2 ? (
-        <Alert variant="danger"> Incorrect!</Alert>
-      ) : (
-        <Alert variant="warning"> It was the word "{popWord}" </Alert>
-      )}
-    </div>
   );
 }

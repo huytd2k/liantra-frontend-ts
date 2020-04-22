@@ -1,5 +1,4 @@
-.learning-board {}
-
+// @import '~antd/es/style/themes/default.less' .learning-board {}
 .ytPlayer {}
 
 // .curLine {
@@ -54,9 +53,27 @@
     justify-content: space-between;
 }
 
-.skipBtn,
-.hintBtn {
+.skipBtn {
+    font-size: 1rem !important;
+    // border-color: #ad6800> !important;
+    border: none !important;
+    background-color: #faad14 !important;
     width: 150px;
+    &:hover {
+        background-color: #d48806 !important;
+    }
+}
+
+.hintBtn {
+    color: #fff !important;
+    font-size: 1rem !important;
+    // border-color: #5b8c00 !important;
+    border: none !important;
+    background-color: #a0d911 !important;
+    width: 150px;
+    &:hover {
+        background-color: #5b8c00 !important;
+    }
 }
 
 .startBtn {
@@ -125,4 +142,10 @@
 .guessLabel {
     text-align: center;
     display: block;
+}
+
+.mainInput {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 8rem;
 }

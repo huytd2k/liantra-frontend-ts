@@ -1,7 +1,7 @@
 import { ApolloProvider } from "@apollo/react-hooks";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
-import { HashRouter as Router, Route, Switch } from "react-router-dom";
+import { HashRouter as Router, Route, Switch, useParams } from "react-router-dom";
 import "./App.css";
 import NavBar from "./Component/NavBar";
 import { ShowLoginProvider } from "./Context/ShowLoginContext";
@@ -19,6 +19,8 @@ import LearningBoard from "./Page/LearningBoard";
 import ProfilePage from "./Page/ProfilePage";
 import LoginPage from "./Page/LoginPage";
 import RegisterPage from "./Page/RegisterPage";
+import Footer from "./Component/Footer";
+import Learning from "./Page/Learning";
 
 const client = new ApolloClient({
   link: ApolloLink.from([
@@ -40,11 +42,11 @@ const client = new ApolloClient({
 });
 
 function App() {
+  const {tapeId} = useParams();
   return (
     <ApolloProvider client={client}>
       <TapeProvider>
         <ShowLoginProvider>
-          <Router>
             <div className="App">
               <header className="App-header">
                 <Switch>
@@ -66,9 +68,10 @@ function App() {
                     <NavBar />
                     <TapeFeed />
                   </Route>
-                  <Route path="/learn">
+                  <Route path="/learn/:tapeId">
                     <NavBar />
-                    <LearningBoard />
+                    <Learning/>
+                    <Footer />
                   </Route>
                   <Route path="/profile">
                     <NavBar />
@@ -77,7 +80,6 @@ function App() {
                 </Switch>
               </header>
             </div>
-          </Router>
         </ShowLoginProvider>
       </TapeProvider>
     </ApolloProvider>
