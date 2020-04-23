@@ -1,16 +1,15 @@
-import { QuestionOutlined } from '@ant-design/icons';
+import { QuestionOutlined } from "@ant-design/icons";
 import { Typography } from "@material-ui/core";
 import { Button as Btn, Input, message } from "antd";
 import "antd/dist/antd.css";
 import React, { useRef, useState } from "react";
-import { Alert, Badge, Button, Col, Container, Form, Modal, ProgressBar, Row } from "react-bootstrap";
+import { Badge, Button, Col, Container, Form, Modal, ProgressBar, Row } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import SentenceCard from "../../Component/SentenceCard";
+import { GetTapeData } from "../../Model/Tape";
 import "./learning-board.scss";
-import {Tape, GET_TAPE_BY_ID_QUERY, GetTapeData} from '../../Model/Tape'
-import { useQuery } from '@apollo/react-hooks';
 interface LearningBoardProps {
-  data : GetTapeData;
+  data: GetTapeData;
 }
 
 interface PassStc {
@@ -19,17 +18,18 @@ interface PassStc {
   hintedIndex?: number[];
 }
 
-export default function LearningBoard({data}: LearningBoardProps) {
+export default function LearningBoard({ data }: LearningBoardProps) {
   const script = data!.getTapebyId.script || [];
-  const link = data!.getTapebyId.ytUrl
-  console.log(data);
+
+  const link = data!.getTapebyId.ytUrl;
+
+  const [ played, setPlayed ] = useState(0);
 
   const sPref = useRef<HTMLDivElement>(null);
 
   const [backed, setBacked] = useState(-1);
 
   const [hintedIndex, setHintedIndex] = useState<number[]>([]);
-
 
   const [showFinishedModal, toogleFinishedModel] = useState(false);
 
@@ -45,13 +45,7 @@ export default function LearningBoard({data}: LearningBoardProps) {
 
   const [skipped, setSkipped] = useState(0);
 
-  const [popWord, setPopWord] = useState("");
-
   const [revealedIdex, setRevealedIndex] = useState(0);
-
-  const [correct, setCorrect] = useState(0);
-
-  const [played, setPlayed] = useState(0);
 
   let laBtnClasses = showLaBtn ? "laBtn" : "laBtn hide";
 
@@ -95,8 +89,7 @@ export default function LearningBoard({data}: LearningBoardProps) {
     myPlayer.seekTo(sentenceStart - 0.25, "seconds");
     setPlaying(true);
     setCurrentSentence(
-      script[currentPhaseIndex + 1]!.text
-        .replace(/[^\w\s]/gi, "")
+      script[currentPhaseIndex + 1]!.text.replace(/[^\w\s]/gi, "")
         .toLowerCase()
         .trim()
         .split(" ")
@@ -121,7 +114,6 @@ export default function LearningBoard({data}: LearningBoardProps) {
   const handleHint = () => {
     handleMessage(3, currentSentence.shift() || "");
     setCurrentSentence(currentSentence);
-    setCorrect(3);
     hintedIndex.push(revealedIdex);
     setHintedIndex(hintedIndex);
     setRevealedIndex(revealedIdex + 1);
@@ -178,12 +170,10 @@ export default function LearningBoard({data}: LearningBoardProps) {
       if (inputWord == currentSentence[0]) {
         handleMessage(1, currentSentence.shift() || "");
         setCurrentSentence(currentSentence);
-        setCorrect(1);
         setInputValue("");
         setRevealedIndex(revealedIdex + 1);
       } else {
         handleMessage(2, null);
-        setCorrect(2);
         setInputValue("");
       }
       if (currentSentence.length === 0) {
@@ -255,6 +245,7 @@ export default function LearningBoard({data}: LearningBoardProps) {
               playing={playing}
               url={link}
               controls={true}
+              played={played}
             />
           </div>
         </Col>
@@ -335,8 +326,8 @@ export default function LearningBoard({data}: LearningBoardProps) {
             onChange={handleInputChange}
           />
           <Btn
-          icon={<QuestionOutlined />}
-          type="primary"
+            icon={<QuestionOutlined />}
+            type="primary"
             className="hintBtn"
             onClick={handleHint}
           >

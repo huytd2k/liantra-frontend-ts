@@ -1,34 +1,20 @@
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import React, { useEffect } from "react";
-import {
-  Container,
-  Nav,
-  Navbar,
-  DropdownButton,
-  Dropdown,
-} from "react-bootstrap";
+import { useMutation } from "@apollo/react-hooks";
+import React from "react";
+import { Container, Dropdown, Nav, Navbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useShowLogin } from "../../Context/ShowLoginContext";
-import { ME_QUERY, UserResponseData, LOGOUT_MUTATION } from "../../Model/UserInput";
-import LoginPanel from "../LoginPanel";
+import { LOGOUT_MUTATION, User } from "../../Model/UserInput";
 import logoBrand from "./brand-logo.png";
 import githubIcon from "./github-icon.svg";
 import "./NavBar.scss";
-
+import { useUser, UserContextState } from "../../Context/UserContext";
+import {useCookies} from 'react-cookie';
 export default function NavBar() {
-  const { showLogin, setShowLogin } = useShowLogin();
-  const { data, loading, error } = useQuery<UserResponseData>(ME_QUERY);
-  const toggleLoginPanel = (e: React.MouseEvent) => {
-    setShowLogin(!showLogin);
-  };
-  
-
-  useEffect(() => console.log("invoke effect"), [data?.me]);
+  const {user} = useUser();
   return (
     <div>
       <Navbar variant="light" bg="light" expand="lg" className="NavBar">
         <Container>
-          <Navbar.Brand className="brand" href="#home">
+          <Navbar.Brand className="brand" href="#">
             <img className="logo" src={logoBrand}></img>
           </Navbar.Brand>
           <Navbar.Collapse>
@@ -38,8 +24,8 @@ export default function NavBar() {
                   View on github
                   <img className="githubIcon" src={githubIcon}></img>
                 </Link>
-                {data?.me != undefined ? (
-                  <PostLoginNav me={data!.me} isOk={data!.isOk} />
+                {user?.username != undefined ? (
+                  <PostLoginNav user={user} />
                 ) : (
                   <PreLoginNav />
                 )}
@@ -48,7 +34,6 @@ export default function NavBar() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      {showLogin && <LoginPanel />}
     </div>
   );
 }
@@ -59,24 +44,28 @@ function PreLoginNav() {
       <Link to="/register" className="signUpButton">
         Sign Up
       </Link>
-      <Link to="/learn" className="signInButton">
+      <Link to="/login" className="signInButton">
         Sign In
       </Link>
     </div>
   );
 }
+interface PostLoginNavProps {
+  user: UserContextState,
+}
 
-function PostLoginNav({ me }: UserResponseData) {
+function PostLoginNav( {user} : PostLoginNavProps) {
+  const removeCookies = useCookies()[2];
   const [logOut] = useMutation(LOGOUT_MUTATION); 
   return (
     <Dropdown>
       <Dropdown.Toggle className="dropdownUser" variant="success" id="dropdown-basic">
-        {me.username}
+        {user.username}
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
         <Dropdown.Item href="#/action-3">Profile</Dropdown.Item>
-        <Dropdown.Item onClick={ () => { logOut(); window.location.reload()} } href="#/action-1">Log out</Dropdown.Item>
+        <Dropdown.Item onClick={ () => {removeCookies("username"); removeCookies("userId"); logOut(); window.location.reload()} } href="#/action-1">Log out</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

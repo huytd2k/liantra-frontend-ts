@@ -1,13 +1,30 @@
 import { gql } from "apollo-boost";
 
 export interface User {
-  username: string;
+  username?: string;
+  userId? :number;
   password?: string;
-  email: string;
+  email?: string;
+}
+export interface MeResponseData {
+  isOk: boolean;
+  user: User;
 }
 export interface UserResponseData {
-  isOk: boolean;
-  me: User;
+  me: MeResponseData
+}
+
+export class ResgisterResponseData {
+    isOk!: boolean;
+    error?: string ;
+    userInfo?: User; 
+    errCode?: number;
+}
+
+export class LoginReponseData {
+  userInfo!: User;
+  isOk!: boolean;
+
 }
 
 export const REGISTER_MUTATION = gql`
@@ -16,6 +33,7 @@ export const REGISTER_MUTATION = gql`
         isOk
         error
         userInfo {
+            userId
             username
             email
         }
@@ -26,7 +44,10 @@ export const REGISTER_MUTATION = gql`
 export const ME_QUERY = gql`
   query {
       me {
-          username
+          isOk
+          user {
+            username
+          }
       }
   }
 
@@ -37,3 +58,14 @@ export const LOGOUT_MUTATION = gql`
     logOut
   }
 `
+export const LOGIN_MUTATION = gql`
+  mutation login($userInput: RegisterUserInput!) {
+    login(userInput: $userInput) {
+      isOk
+      userInfo {
+        username
+        userId
+      }
+    }
+  }
+`;

@@ -5,14 +5,14 @@ import ProfileCard from "../../Component/ProfileCard";
 import TapeCard from "../../Component/TapeCard";
 import { GET_TAPE_QUERY, TapeData } from "../../Model/Tape";
 import "./tape-feed.scss";
-import { Menu, Dropdown } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
 
 interface TapeFeedProps {}
 
 export default function TapeFeed({}: TapeFeedProps) {
   const { loading, data, error } = useQuery<TapeData>(GET_TAPE_QUERY);
+  // if (!isLogged) return <Redirect to="/" />
   if (loading) return <p>loading</p>
+  if (error) return <p> {error}</p>
   return (
     <Container>
       {" "}

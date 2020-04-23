@@ -1,14 +1,40 @@
 import React, { useState } from "react";
-import { Modal, Form, Button } from "react-bootstrap";
-import { useShowLogin } from "../../Context/ShowLoginContext";
-import LoginForm from "../LoginForm";
-import "./LoginPanel.css";
-import brandLogo from "../../asset/brand-logo.png"
+import { Button, Form } from "react-bootstrap";
+import { Link, Redirect } from "react-router-dom";
 import FormHeader from "../FormHeader";
-import { Link } from "react-router-dom";
+import "./LoginPanel.css";
+import { useMutation } from "@apollo/react-hooks";
+import { LOGIN_MUTATION, LoginReponseData, User } from "../../Model/UserInput";
+import { useUser } from "../../Context/UserContext";
+import {useCookies} from 'react-cookie'
 export default function LoginPanel() {
+  const setCookies = useCookies()[1]
+  const {setUser} = useUser();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [login, { error, data,loading }] = useMutation<
+    { login : LoginReponseData },
+    { userInput: User }
+  >(LOGIN_MUTATION, {
+    variables: { userInput: { username, password} },
+  });
+  const handleLogin = async () => {
+      const resData = await login();
+      if (resData.data?.login.isOk) {
+          setUser({
+            userId: resData.data.login.userInfo.userId,
+            username: resData.data.login.userInfo.username, 
+            isLogged: true
+          });
+          setCookies("username", resData!.data.login.userInfo.username);
+          setCookies("userId", resData!.data.login.userInfo.userId);
+      }
+
+  }
+  console.log(data);
+  if(loading) return <p>Loading</p>
+  if (error) return <p>{error}</p>
+  if (data?.login.isOk) return <Redirect to="/feed" />
   return (
     <div className="loginPanel">
         <FormHeader />
@@ -19,7 +45,7 @@ export default function LoginPanel() {
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                 setUsername(e.target.value)
               }
-              type="password"
+              type="text"
               placeholder="Enter your username"
             />
           </Form.Group>
@@ -37,14 +63,9 @@ export default function LoginPanel() {
             <Form.Check type="checkbox" label="Remember me!" />
           </Form.Group>
           <Button
-            onClick={(e: any) => {
-              e.preventDefault();
-            //   username && password && email && loginUser();
-              window.location.reload();
-            }}
+            onClick={handleLogin}
             variant="outline-success"
             className="signInSubmitBtn"
-            type="submit"
           >
             Sign in Liantra
           </Button>

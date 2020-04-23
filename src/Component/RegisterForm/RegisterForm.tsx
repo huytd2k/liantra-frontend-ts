@@ -1,29 +1,28 @@
-import React, { useState, useRef } from "react";
-import "./register-form.scss";
-import { Form, Button, Alert } from "react-bootstrap";
-import {
-  REGISTER_MUTATION,
-  UserResponseData,
-  User,
-} from "../../Model/UserInput";
 import { useMutation } from "@apollo/react-hooks";
-
+import React, { useState } from "react";
+import { Alert, Button, Form } from "react-bootstrap";
+import { Redirect } from "react-router-dom";
+import { REGISTER_MUTATION, ResgisterResponseData, User } from "../../Model/UserInput";
+import "./register-form.scss";
+import { useUser } from "../../Context/UserContext";
+import {useCookies} from 'react-cookie'
 interface RegisterFormProps {}
 
 export default function RegisterForm({}: RegisterFormProps) {
+  const [cookies, setCookies] = useCookies();
+  const {user, setUser} = useUser();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
   const [retypeMatch, setRetypeMatch] = useState(true);
 
-  const [registerUser, { error, data }] = useMutation<
-    { registerUser : UserResponseData },
+  const [register, { error, data,loading }] = useMutation<
+    { register : ResgisterResponseData },
     { userInput: User }
   >(REGISTER_MUTATION, {
     variables: { userInput: { username, password, email } },
   });
-
   const handleOutFocus = () => {
       if(retypePassword === password) setRetypeMatch(true);
       if(retypePassword !== password) setRetypeMatch(false);
@@ -36,9 +35,26 @@ export default function RegisterForm({}: RegisterFormProps) {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     if (username && password && retypeMatch) {
-      registerUser();
-      window.location.reload();
+      register().then(
+        (resdata) => {
+          setUser({
+            isLogged: true,
+            username: resdata.data?.register.userInfo?.username,
+            userId: resdata.data?.register.userInfo?.userId, 
+          })
+          setCookies("username", resdata.data?.register.userInfo?.username);
+          setCookies("userId", resdata.data?.register.userInfo?.userId);
+       }
+      );
     }
+  }
+  if(data?.register.isOk) {
+    setUser({
+      isLogged: true,
+      username: data!.register.userInfo?.username,
+      userId: data!.register.userInfo?.userId 
+    })
+    return <Redirect to="/feed" /> 
   }
   return (
     <div className="registerForm">

@@ -4,11 +4,13 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { HashRouter as Router } from 'react-router-dom';
-
+import {CookiesProvider} from 'react-cookie';
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <App />
+      <CookiesProvider>
+        <App />
+      </CookiesProvider>
     </Router>
   </React.StrictMode>,
   document.getElementById('root')
