@@ -51,6 +51,23 @@ export const GET_TAPE_BY_ID_QUERY = gql`
     }
   }
 `;
+
+export const GET_TAPE_BY_LEVEL = gql`
+  query($level: Float!) {
+    getTapebyLevel(level: $level) {
+      tapeId
+      title
+      level
+      script {
+        text
+        start
+        duration
+      }
+      description
+      ytUrl
+    }
+  }
+`;
 export const ADD_TAPE_MUTATION = gql`
   mutation addTape($tapeInput: TapeInput!) {
     addTape(tape: $tapeInput) {

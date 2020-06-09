@@ -58,6 +58,7 @@ export default function RegisterForm({}: RegisterFormProps) {
   }
   return (
     <div className="registerForm">
+      { data?.register.errCode == 1 && <Alert variant="danger"> This username has been taken!</Alert>}
       <Form onSubmit={handleSubmit}>
         {error ? <p>Error</p> : null}
         {data && console.log(data)}

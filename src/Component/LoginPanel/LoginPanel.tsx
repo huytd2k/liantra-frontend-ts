@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Alert } from "react-bootstrap";
 import { Link, Redirect } from "react-router-dom";
 import FormHeader from "../FormHeader";
 import "./LoginPanel.css";
@@ -38,6 +38,7 @@ export default function LoginPanel() {
   return (
     <div className="loginPanel">
         <FormHeader />
+        { data?.login.isOk == false && <Alert variant="danger">Your username or password is wrong!</Alert>}
         <Form className="mainLoginForm">
           <Form.Group>
             <Form.Label>Username :</Form.Label>

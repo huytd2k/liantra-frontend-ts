@@ -32,6 +32,7 @@ export const REGISTER_MUTATION = gql`
     register(userInput: $userInput) {
         isOk
         error
+        errCode
         userInfo {
             userId
             username
