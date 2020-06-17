@@ -6,8 +6,12 @@ import React, { useRef, useState } from "react";
 import { Badge, Button, Col, Container, Form, Modal, ProgressBar, Row } from "react-bootstrap";
 import ReactPlayer from "react-player";
 import SentenceCard from "../../Component/SentenceCard";
-import { GetTapeData } from "../../Model/Tape";
+import { GetTapeData, CREATE_SESSION_MUTATION, SessionData, Session } from "../../Model/Tape";
 import "./learning-board.scss";
+import { useMutation } from "@apollo/react-hooks";
+import { useUser } from "../../Context/UserContext";
+import { StringDecoder } from "string_decoder";
+import { useHistory, Redirect } from "react-router-dom";
 interface LearningBoardProps {
   data: GetTapeData;
 }
@@ -20,6 +24,23 @@ interface PassStc {
 
 export default function LearningBoard({ data }: LearningBoardProps) {
   const script = data!.getTapebyId.script || [];
+ 
+  const user = useUser();
+  const [score, setScore] = useState(0);
+
+  const [createSession, { error, data: dataSession }] = useMutation<
+    { createSession: SessionData },
+    { sessionInput: Session }
+  >(CREATE_SESSION_MUTATION, {
+    variables: {
+      sessionInput: {
+        score: score,
+        userId: parseInt(user.user.userId! as any),
+        tapeId: data.getTapebyId.tapeId!
+      },
+    },
+  });
+  const [finished, setFinished] = useState(false);
 
   const link = data!.getTapebyId.ytUrl;
 
@@ -62,6 +83,7 @@ export default function LearningBoard({ data }: LearningBoardProps) {
   };
 
   const handleCompleted = () => {
+    setScore(rightSentences/script.length * 100)
     toogleFinishedModel(true);
   };
 
@@ -160,6 +182,10 @@ export default function LearningBoard({ data }: LearningBoardProps) {
     setSkipped(skipped + 1);
   };
 
+  const handleSession = () => {
+    createSession()
+  }
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(hintedIndex);
     sPref.current!.scrollTop = sPref.current!.scrollHeight;
@@ -188,6 +214,7 @@ export default function LearningBoard({ data }: LearningBoardProps) {
       }
     }
   };
+  if (dataSession) return <Redirect to="#profile"/>
   return (
     <Container fluid className="learningBoard">
       <Modal show={showFinishedModal}>
@@ -213,7 +240,7 @@ export default function LearningBoard({ data }: LearningBoardProps) {
               <Badge variant="warning">Hinted words 0</Badge>
             </Typography>
           </div>
-          <Button>Save this session</Button>
+          <Button onClick={() => handleSession()}>Save this session</Button>
         </Modal.Body>
       </Modal>
       <Row>

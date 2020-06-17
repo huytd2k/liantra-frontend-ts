@@ -16,6 +16,25 @@ export interface TapeData {
   tapes: Tape[];
   isOk: boolean;
 }
+export interface Session {
+  sessionId?: number,
+  tapeId: number
+  score: number,
+  userId: number,
+  tape?: Tape,
+}
+export interface SessionData {
+  isOk: boolean,
+  sessions: Session[],
+}
+
+export interface GetSessionData {
+  getAllSession: SessionData
+}
+export interface SessionData {
+  isOk: boolean,
+  session: Session,
+}
 
 export interface GetTapeData {
   getTapebyId: Tape;
@@ -73,5 +92,34 @@ export const ADD_TAPE_MUTATION = gql`
     addTape(tape: $tapeInput) {
       isOk
     }
+  }
+`;
+
+export const CREATE_SESSION_MUTATION = gql`
+  mutation createSession($sessionInput: SessionInput!) {
+    createSession(sessionInput: $sessionInput) {
+       isOk
+       session {
+         sessionId
+       }
+       error
+    }
+  }
+`;
+
+export const GET_SESSION_QUERY = gql`
+  query($userId: Int!) {
+    getAllSession(userId: $userId) {
+    isOk
+    sessions {
+      sessionId
+      score
+      tape {
+        ytUrl
+        tapeId
+        title
+      }
+    }
+  }
   }
 `;

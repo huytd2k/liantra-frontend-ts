@@ -8,8 +8,6 @@ import TapeCardProps from './TapeCardProps';
 import { Link } from 'react-router-dom';
 
 export default function TapeCard(props: TapeCardProps) {
-    console.log(props.tape);
-
     return (
         <div >
             <Link to={`/learn/${props.tape.tapeId}`}>
