@@ -24,9 +24,6 @@ export default function TapeFeed({}: TapeFeedProps) {
             <TapeCard key={tape.tapeId} tape={tape} />
           ))}
         </Col>
-        <Col xs={4}>
-          <ProfileCard />
-        </Col>
       </Row>
     </Container>
   );

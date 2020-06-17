@@ -16,7 +16,7 @@ export default function RegisterForm({}: RegisterFormProps) {
   const [email, setEmail] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
   const [retypeMatch, setRetypeMatch] = useState(true);
-
+  const [expt, setExpt] = useState(false);
   const [register, { error, data,loading }] = useMutation<
     { register : ResgisterResponseData },
     { userInput: User }
@@ -34,7 +34,7 @@ export default function RegisterForm({}: RegisterFormProps) {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    if (username && password && retypeMatch) {
+    if (username && password && retypeMatch && username.length > 5) {
       register().then(
         (resdata) => {
           setUser({
@@ -46,6 +46,8 @@ export default function RegisterForm({}: RegisterFormProps) {
           setCookies("userId", resdata.data?.register.userInfo?.userId);
        }
       );
+    } else {
+      setExpt(true);
     }
   }
   if(data?.register.isOk) {
@@ -60,7 +62,7 @@ export default function RegisterForm({}: RegisterFormProps) {
     <div className="registerForm">
       { data?.register.errCode == 1 && <Alert variant="danger"> This username has been taken!</Alert>}
       <Form onSubmit={handleSubmit}>
-        {error ? <p>Error</p> : null}
+      {expt && <Alert className="matchAlert" variant="danger"> Something was wrong!</Alert>}
         {data && console.log(data)}
         <Form.Group>
           <Form.Label>Email address :</Form.Label>

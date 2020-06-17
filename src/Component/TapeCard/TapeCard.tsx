@@ -15,6 +15,9 @@ export default function TapeCard(props: TapeCardProps) {
                     <Card.Body className="cardBody">
                         <Card.Title>{props.tape.title}</Card.Title>
                         <Card.Text>
+                            Level: {props.tape.level}
+                        </Card.Text>
+                        <Card.Text>
                             {props.tape.description}
                         </Card.Text>
                         {/* {props.tape.tags.map(tag => 
