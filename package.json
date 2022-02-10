@@ -28,7 +28,7 @@
     "chartjs": "^0.3.24",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
     "react-chartjs-2": "^2.9.0",
